@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information</title>
+    <style>
+        /* Styles for the body and button */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+        }
+        #getAccountInfoBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        /* Styles for the account info container */
+        #accountInfoContainer {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Styles for paragraphs inside the account info container */
+        #accountInfoContainer p {
+            margin: 10px 0;
+        }
+        /* Styles for pre tags inside the account info container */
+        #accountInfoContainer pre {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Account Information</h1>
+    <button id="getAccountInfoBtn">Get Account Info</button>
+    <div id="accountInfoContainer"></div>
+    <!-- <a href="./transaction.html">Transactions</a> -->
+
+    <script>
+        document.getElementById('getAccountInfoBtn').addEventListener('click', async function() {
+            try {
+                const response = await fetch('/account-info', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayAccountInfo(data); // Display account information
+                } else {
+                    alert(data.error); // Show error message
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.'); // Handle network or server errors
+            }
+        });
+
+        function displayAccountInfo(data) {
+            const accountInfoContainer = document.getElementById('accountInfoContainer');
+            accountInfoContainer.innerHTML = ''; // Clear previous content
+
+            // Create paragraph elements for each piece of account information
+            const publicKey = document.createElement('p');
+            publicKey.textContent = `Account Address: ${data.publicKey}`;
+
+            const walletSecret = document.createElement('p');
+            walletSecret.textContent = `Wallet Secret: ${data.walletSecret}`;
+
+            // Format key pair information without brackets
+            const keyPairText = `Private Key: ${data.keypair.privateKey}\nPublic Key: ${data.keypair.publicKey}`;
+            const keypair = document.createElement('pre');
+            keypair.textContent = keyPairText;
+
+            // Format account information without brackets
+            const accountInfoText = `Sequence: ${data.accountInfo.sequence}\nXRP Balance: ${data.accountInfo.xrpBalance}\nOwner Count: ${data.accountInfo.ownerCount}\nPrevious Affecting Transaction ID: ${data.accountInfo.previousAffectingTransactionID}\nPrevious Affecting Transaction Ledger Version: ${data.accountInfo.previousAffectingTransactionLedgerVersion}`;
+            const accountInfo = document.createElement('pre');
+            accountInfo.textContent = accountInfoText;
+
+            // Append the elements to the container
+            accountInfoContainer.appendChild(publicKey);
+            accountInfoContainer.appendChild(walletSecret);
+            accountInfoContainer.appendChild(keypair);
+            accountInfoContainer.appendChild(accountInfo);
+        }
+    </script>
+</body>
+</html>

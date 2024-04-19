@@ -1,0 +1,82 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Transactions</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Previous Transactions</h2>
+    <div id="transactionsTable"></div>
+
+    <script>
+        // Function to fetch previous transactions from the server
+        async function fetchTransactions() {
+            try {
+                const response = await fetch('/previous-transactions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayTransactions(data.transactions);
+                } else {
+                    console.error('Failed to fetch transactions:', data.error);
+                }
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+            }
+        }
+
+        // Function to display transactions in a table
+        function displayTransactions(transactions) {
+            const table = document.createElement('table');
+
+            // Create table headers
+            const headers = ['Transaction ID', 'Type', 'Amount', 'Timestamp'];
+            const headerRow = table.insertRow();
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+
+            // Create table rows for each transaction
+            transactions.forEach(transaction => {
+                const row = table.insertRow();
+                const { id, type, outcome, timestamp } = transaction;
+                const { currency, value } = outcome.deliveredAmount;
+
+                row.insertCell().textContent = id;
+                row.insertCell().textContent = type;
+                row.insertCell().textContent = `${value} ${currency}`;
+                row.insertCell().textContent = new Date(timestamp).toLocaleString();
+            });
+
+            document.getElementById('transactionsTable').appendChild(table);
+        }
+
+        // Fetch transactions when the page loads
+        fetchTransactions();
+    </script>
+</body>
+</html> -->
